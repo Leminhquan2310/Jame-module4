@@ -3,13 +3,17 @@ package com.examworkmanagement.controller;
 import com.examworkmanagement.entity.Job;
 import com.examworkmanagement.entity.JobForm;
 import com.examworkmanagement.entity.JobStatus;
+import com.examworkmanagement.entity.PriorityLevel;
 import com.examworkmanagement.service.JobService;
+import com.examworkmanagement.service.PriorityLevelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -28,8 +32,16 @@ public class JobController {
     @Autowired
     private JobService jobService;
 
+    @Autowired
+    private PriorityLevelService priorityLevelService;
+
     @Value("${file-upload}")
     private String fileUpload;
+
+    @ModelAttribute("priorityLevels")
+    public List<PriorityLevel> getListPriorityLevel(){
+        return priorityLevelService.findAll();
+    }
 
     @GetMapping("list")
     public ModelAndView showList(
@@ -82,7 +94,10 @@ public class JobController {
     }
 
     @PostMapping("create")
-    public String createJob(@ModelAttribute JobForm jobForm) {
+    public String createJob(@Validated @ModelAttribute JobForm jobForm, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "jobs-create";
+        }
         MultipartFile multipartFile = jobForm.getImage();
         String fileName = multipartFile.getOriginalFilename();
         try {
@@ -90,13 +105,16 @@ public class JobController {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        Job job = new Job(jobForm.getId(), jobForm.getName(), jobForm.getDescription(), jobForm.getCompletedTime(), fileName, jobForm.getStatus().getId());
+        Job job = new Job(jobForm.getId(), jobForm.getName(), jobForm.getDescription(), jobForm.getCompletedTime(), fileName, jobForm.getStatus().getId(), jobForm.getPriorityLevel());
         jobService.create(job);
         return "redirect:/jobs/list";
     }
 
     @PostMapping("save")
-    public String saveJob(@ModelAttribute JobForm jobForm) {
+    public String saveJob(@Validated @ModelAttribute JobForm jobForm, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "jobs-edit";
+        }
         String fileName;
         if (jobForm.getImage().isEmpty()) {
             Job job = jobService.findById(jobForm.getId());
@@ -110,7 +128,7 @@ public class JobController {
                 ex.printStackTrace();
             }
         }
-        Job job = new Job(jobForm.getId(), jobForm.getName(), jobForm.getDescription(), jobForm.getCompletedTime(), fileName, jobForm.getStatus().getId());
+        Job job = new Job(jobForm.getId(), jobForm.getName(), jobForm.getDescription(), jobForm.getCompletedTime(), fileName, jobForm.getStatus().getId(), jobForm.getPriorityLevel());
         jobService.create(job);
         return "redirect:/jobs/list";
     }

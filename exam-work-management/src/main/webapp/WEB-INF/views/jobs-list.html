@@ -49,6 +49,7 @@
             <th>Description</th>
             <th>Completed Time</th>
             <th>Image</th>
+            <th>Priority Level</th>
             <th>Status</th>
             <th>Hành động</th>
         </tr>
@@ -63,6 +64,7 @@
                 <img th:if="${job.image}" th:src="@{'/uploads/' + ${job.image}}" alt="img"
                      style="max-height:60px; max-width:100px;">
             </td>
+            <td th:text="${job.priorityLevel.description}"></td>
             <td>
                 <span th:switch="${job.status}">
                     <!-- đề phòng DB trả string -->

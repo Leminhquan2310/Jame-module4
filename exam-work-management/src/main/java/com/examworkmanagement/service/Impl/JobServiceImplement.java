@@ -1,7 +1,8 @@
-package com.examworkmanagement.service;
+package com.examworkmanagement.service.Impl;
 
 import com.examworkmanagement.entity.Job;
 import com.examworkmanagement.repository.JobRepository;
+import com.examworkmanagement.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

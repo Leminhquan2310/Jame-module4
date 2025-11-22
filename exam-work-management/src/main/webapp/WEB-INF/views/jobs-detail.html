@@ -8,7 +8,7 @@
 </head>
 <body>
 <div class="container mt-4">
-    <a class="btn btn-link" th:href="@{/jobs}">&larr; Quay lại danh sách</a>
+    <a class="btn btn-link" th:href="@{/jobs/list}">&larr; Quay lại danh sách</a>
     <h1 class="mb-3">Chi tiết Job</h1>
 
     <div class="card">
@@ -25,7 +25,7 @@
                 <img th:if="${job.image}" th:src="@{'/uploads/' + ${job.image}}" alt="img"
                      style="max-height:300px; max-width:300px;">
             </p>
-
+            <p class="card-text"><strong>Priority Level:</strong> <span th:text="${job.priorityLevel.description}">Cấp độ ưu tiên</span></p>
             <p class="card-text"><strong>Status:</strong>
                 <span th:switch="${job.status}">
           <span th:case="0">Đang làm</span>

@@ -1,22 +1,36 @@
 package com.examworkmanagement.entity;
 
+import jakarta.validation.constraints.*;
 import org.springframework.web.multipart.MultipartFile;
 
 public class JobForm {
     private Long id;
+
+    @NotEmpty(message = "Tên không được để trống!")
+    @Size(max = 20, message = "Tên không được lớn hơn 20 kí tự!")
     private String name;
+
+
+    @NotEmpty(message = "Mô tả không được để trống!")
+    @Size(max = 200, message = "Mô tả không được lớn hơn 200 kí tự!")
     private String description;
-    private int completedTime;
+
+    @NotNull(message = "Không được để trống!")
+    @Min(value = 1, message = "Thời gian hoàn thành phải lớn hơn 0")
+    private Integer completedTime;
+
     private MultipartFile image;
     private JobStatus status;
+    private PriorityLevel priorityLevel;
 
-    public JobForm(Long id, String name, String description, int completedTime, MultipartFile image, JobStatus status) {
+    public JobForm(Long id, String name, String description, Integer completedTime, MultipartFile image, JobStatus status, PriorityLevel priorityLevel) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.completedTime = completedTime;
         this.image = image;
         this.status = status;
+        this.priorityLevel = priorityLevel;
     }
 
     public JobForm() {
@@ -46,11 +60,11 @@ public class JobForm {
         this.description = description;
     }
 
-    public int getCompletedTime() {
+    public Integer getCompletedTime() {
         return completedTime;
     }
 
-    public void setCompletedTime(int completedTime) {
+    public void setCompletedTime(Integer completedTime) {
         this.completedTime = completedTime;
     }
 
@@ -68,5 +82,13 @@ public class JobForm {
 
     public void setStatus(JobStatus status) {
         this.status = status;
+    }
+
+    public PriorityLevel getPriorityLevel() {
+        return priorityLevel;
+    }
+
+    public void setPriorityLevel(PriorityLevel priorityLevel) {
+        this.priorityLevel = priorityLevel;
     }
 }

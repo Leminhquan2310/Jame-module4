@@ -15,24 +15,35 @@
         <!-- id -->
         <input type="hidden" th:field="*{id}"/>
 
+
         <!-- name -->
         <div class="mb-3">
             <label class="form-label">Name</label>
-            <input type="text" th:field="*{name}" class="form-control" placeholder="Enter job name" required>
+            <input type="text" th:field="*{name}" class="form-control" placeholder="Enter job name"  th:classappend="${#fields.hasErrors('name')} ? ' is-invalid' : ''" >
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
         </div>
 
         <!-- description -->
         <div class="mb-3">
             <label class="form-label">Description</label>
-            <textarea th:field="*{description}" class="form-control" rows="4" placeholder="Description"></textarea>
+            <textarea th:field="*{description}" class="form-control" rows="4" th:classappend="${#fields.hasErrors('description')} ? ' is-invalid' : ''" placeholder="Description"></textarea>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Please
+                enter a valid username.
+            </div>
         </div>
 
         <!-- completedTime (int) -->
         <div class="mb-3">
             <label class="form-label">Completed Time</label>
-            <input type="number" th:field="*{completedTime}" th:min="1" class="form-control"
-                   placeholder="Enter time (int)">
+            <input type="number" th:field="*{completedTime}" class="form-control"
+                   th:classappend="${#fields.hasErrors('completedTime')} ? ' is-invalid' : ''"
+                   placeholder="Enter time (1-10)">
+            <div class="invalid-feedback"
+                 th:if="${#fields.hasErrors('completedTime')}"
+                 th:errors="*{completedTime}">
+            </div>
         </div>
+
 
         <!-- image (MultipartFile) -->
         <div class="mb-3">
@@ -47,6 +58,17 @@
                 <option th:each="s : ${T(com.examworkmanagement.entity.JobStatus).values()}"
                         th:value="${s}"
                         th:text="${s.label}">
+                </option>
+            </select>
+        </div>
+
+        <!-- Priority Level -->
+        <div class="mb-3">
+            <label class="form-label">Priority Level</label>
+            <select th:field="*{priorityLevel.id}" class="form-select">
+                <option th:each="pl : ${priorityLevels}"
+                        th:value="${pl.id}"
+                        th:text="${pl.description}">
                 </option>
             </select>
         </div>
